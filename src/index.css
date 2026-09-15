@@ -1,0 +1,371 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Chakra Petch', system-ui, sans-serif;
+  }
+  
+  .font-mono-tech {
+    font-family: 'Share Tech Mono', monospace;
+  }
+}
+
+/* Sci-fi Scanline effect */
+.scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* CRT monitor curve & glow */
+.crt-glow {
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.15), inset 0 0 30px rgba(6, 182, 212, 0.08);
+}
+
+/* Neon Text Glows */
+.neon-text-cyan {
+  text-shadow: 0 0 5px rgba(6, 182, 212, 0.8), 0 0 15px rgba(6, 182, 212, 0.5);
+}
+
+.neon-text-red {
+  text-shadow: 0 0 5px rgba(239, 68, 68, 0.8), 0 0 15px rgba(239, 68, 68, 0.5);
+}
+
+.neon-text-amber {
+  text-shadow: 0 0 5px rgba(245, 158, 11, 0.8), 0 0 15px rgba(245, 158, 11, 0.5);
+}
+
+.neon-text-green {
+  text-shadow: 0 0 5px rgba(34, 197, 94, 0.8), 0 0 15px rgba(34, 197, 94, 0.5);
+}
+
+/* Neon Box Shadows */
+.neon-border-cyan {
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.4), inset 0 0 8px rgba(6, 182, 212, 0.2);
+}
+
+.neon-border-red {
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4), inset 0 0 8px rgba(239, 68, 68, 0.2);
+}
+
+.neon-border-green {
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4), inset 0 0 8px rgba(34, 197, 94, 0.2);
+}
+
+/* Laser animation */
+@keyframes laserPulse {
+  0%, 100% {
+    opacity: 0.85;
+    box-shadow: 0 0 12px #ef4444, 0 0 24px #ef4444;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 20px #ef4444, 0 0 40px #f87171, 0 0 60px #ef4444;
+  }
+}
+
+.laser-beam {
+  animation: laserPulse 1.2s infinite ease-in-out;
+}
+
+/* Glitch animation */
+@keyframes glitchFlash {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.animate-glitch {
+  animation: glitchFlash 0.3s cubic-bezier(.25, .46, .45, .94) both;
+}
+
+/* Hazard Caution Stripe Pattern */
+.hazard-stripes {
+  background: repeating-linear-gradient(
+    -45deg,
+    #f59e0b,
+    #f59e0b 12px,
+    #1e293b 12px,
+    #1e293b 24px
+  );
+}
+
+.hazard-stripes-subtle {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(245, 158, 11, 0.4),
+    rgba(245, 158, 11, 0.4) 8px,
+    rgba(30, 41, 59, 0.4) 8px,
+    rgba(30, 41, 59, 0.4) 16px
+  );
+}
+
+/* 2D Cartoon Game Shadow & Borders */
+.game-cartoon-border {
+  border: 3px solid #1e293b;
+  box-shadow: 0 4px 0 #0f172a;
+}
+
+.game-cartoon-panel {
+  background: #f8fafc;
+  border: 3px solid #334155;
+  box-shadow: 0 5px 0 #1e293b;
+}
+
+.game-cartoon-btn {
+  transition: all 0.15s ease-out;
+  box-shadow: 0 4px 0 #0f172a;
+}
+
+.game-cartoon-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #0f172a;
+}
+
+/* ============================================================
+   Character 2D Cartoon Walk & Idle Animation System
+   ============================================================ */
+
+/* Whole body vertical bounce + energetic forward tilt */
+@keyframes walkBodyBounce {
+  0% {
+    transform: translateY(0px) rotate(1deg);
+  }
+  25% {
+    transform: translateY(-5px) rotate(3.5deg);
+  }
+  50% {
+    transform: translateY(0px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(-5px) rotate(3.5deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(1deg);
+  }
+}
+
+.char-walking-body {
+  animation: walkBodyBounce 0.44s infinite ease-in-out;
+}
+
+/* Left Leg (Back Leg) - Swing from hip */
+@keyframes walkLegLeft {
+  0% {
+    transform: rotate(-24deg) translateY(-1px);
+  }
+  25% {
+    transform: rotate(0deg) translateY(0px);
+  }
+  50% {
+    transform: rotate(22deg) translateY(-2px);
+  }
+  75% {
+    transform: rotate(6deg) translateY(-4px);
+  }
+  100% {
+    transform: rotate(-24deg) translateY(-1px);
+  }
+}
+
+.char-leg-left-walking {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: walkLegLeft 0.44s infinite ease-in-out;
+}
+
+/* Right Leg (Front Leg) - Counter-phase swing from hip */
+@keyframes walkLegRight {
+  0% {
+    transform: rotate(22deg) translateY(-2px);
+  }
+  25% {
+    transform: rotate(6deg) translateY(-4px);
+  }
+  50% {
+    transform: rotate(-24deg) translateY(-1px);
+  }
+  75% {
+    transform: rotate(0deg) translateY(0px);
+  }
+  100% {
+    transform: rotate(22deg) translateY(-2px);
+  }
+}
+
+.char-leg-right-walking {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: walkLegRight 0.44s infinite ease-in-out;
+}
+
+/* Left Arm (Back Arm) - Pendulum swing */
+@keyframes walkArmLeft {
+  0% {
+    transform: rotate(22deg);
+  }
+  50% {
+    transform: rotate(-20deg);
+  }
+  100% {
+    transform: rotate(22deg);
+  }
+}
+
+.char-arm-left-walking {
+  transform-box: fill-box;
+  transform-origin: top right;
+  animation: walkArmLeft 0.44s infinite ease-in-out;
+}
+
+/* Right Arm (Front Arm with Flashlight) - Rhythmic beam bob */
+@keyframes walkArmRight {
+  0% {
+    transform: rotate(-18deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+  100% {
+    transform: rotate(-18deg);
+  }
+}
+
+.char-arm-right-walking {
+  transform-box: fill-box;
+  transform-origin: top left;
+  animation: walkArmRight 0.44s infinite ease-in-out;
+}
+
+/* Flashlight Beam synced with right arm motion */
+@keyframes walkBeam {
+  0% {
+    transform: rotate(-3.5deg);
+  }
+  50% {
+    transform: rotate(3.5deg);
+  }
+  100% {
+    transform: rotate(-3.5deg);
+  }
+}
+
+.char-beam-walking {
+  animation: walkBeam 0.44s infinite ease-in-out;
+}
+
+/* Lab Coat Tails flutter */
+@keyframes walkCoatTails {
+  0% {
+    transform: rotate(-7deg) skewX(-4deg);
+  }
+  25% {
+    transform: rotate(5deg) skewX(3deg);
+  }
+  50% {
+    transform: rotate(-7deg) skewX(-4deg);
+  }
+  75% {
+    transform: rotate(5deg) skewX(3deg);
+  }
+  100% {
+    transform: rotate(-7deg) skewX(-4deg);
+  }
+}
+
+.char-coat-tails-walking {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: walkCoatTails 0.44s infinite ease-in-out;
+}
+
+/* Red Tie secondary sway */
+@keyframes walkTie {
+  0% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(-8deg);
+  }
+}
+
+.char-tie-walking {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: walkTie 0.44s infinite ease-in-out;
+}
+
+/* Head bob */
+@keyframes walkHeadBob {
+  0%, 50%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25%, 75% {
+    transform: translateY(-1.5px) rotate(1.5deg);
+  }
+}
+
+.char-head-walking {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: walkHeadBob 0.44s infinite ease-in-out;
+}
+
+/* Shadow expanding/contracting with foot steps */
+@keyframes walkShadow {
+  0%, 50%, 100% {
+    transform: scaleX(1.18);
+    opacity: 0.75;
+  }
+  25%, 75% {
+    transform: scaleX(0.88);
+    opacity: 0.45;
+  }
+}
+
+.char-shadow-walking {
+  animation: walkShadow 0.44s infinite ease-in-out;
+}
+
+/* Idle Breathing & Stance */
+@keyframes idleBreathe {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.01, 0.99);
+  }
+}
+
+.char-idle-body {
+  animation: idleBreathe 2.2s infinite ease-in-out;
+}
+
+@keyframes idleHead {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1.5deg);
+  }
+}
+
+.char-head-idle {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: idleHead 3s infinite ease-in-out;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Lab Escape",
+  "description": "Game escape room laboratorium futuristik rahasia dengan puzzle kode, pencocokan warna, laser keamanan, dan timer pelarian.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
