@@ -307,10 +307,10 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                 </div>
                 <div>
                   <h3 className="text-sm font-black text-[#0f172a]">
-                    1. Menggerakkan Profesor
+                    1. Menggerakkan & Melompatkan Profesor
                   </h3>
                   <p className="text-xs text-slate-700 mt-0.5 leading-relaxed">
-                    Klik langsung di lantai laboratorium atau gunakan tombol arah <span className="px-1.5 py-0.2 bg-slate-200 rounded border border-slate-400 font-bold">A / D</span> (atau panah kiri/kanan) serta tombol jalan di panel bawah layar.
+                    Klik langsung di lantai laboratorium atau gunakan tombol <span className="px-1.5 py-0.2 bg-slate-200 rounded border border-slate-400 font-bold">A / D</span> (atau panah kiri/kanan). Tekan tombol <span className="px-1.5 py-0.2 bg-emerald-200 rounded border border-emerald-400 font-bold text-[#0f172a]">W</span>, <span className="px-1.5 py-0.2 bg-emerald-200 rounded border border-emerald-400 font-bold text-[#0f172a]">Panah Atas</span>, <span className="px-1.5 py-0.2 bg-emerald-200 rounded border border-emerald-400 font-bold text-[#0f172a]">Spasi</span>, atau tombol <span className="font-black text-emerald-700">Lompat</span> di panel kontrol untuk melompat.
                   </p>
                 </div>
               </div>
@@ -355,7 +355,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                     4. Pintu Ruangan Sisi Kiri & Kanan
                   </h3>
                   <p className="text-xs text-slate-700 mt-0.5 leading-relaxed">
-                    Setiap ruangan dilengkapi pintu di kedua sisi untuk berpindah sektor. Dekati pintu lalu klik gambar pintu atau tekan tombol <span className="px-1.5 py-0.5 bg-slate-200 rounded border border-slate-400 font-bold text-[#0f172a]">E</span> (atau Spasi) untuk berpindah ruangan. Pintu dengan kunci merah memerlukan kartu akses yang sesuai.
+                    Setiap ruangan dilengkapi pintu di kedua sisi untuk berpindah sektor. Dekati pintu lalu klik gambar pintu atau tekan tombol <span className="px-1.5 py-0.5 bg-slate-200 rounded border border-slate-400 font-bold text-[#0f172a]">E</span> untuk berpindah ruangan. Pintu dengan kunci merah memerlukan kartu akses yang sesuai.
                   </p>
                 </div>
               </div>

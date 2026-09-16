@@ -10,7 +10,8 @@ import {
   Footprints,
   Compass,
   DoorOpen,
-  Lock
+  Lock,
+  ChevronsUp
 } from 'lucide-react';
 import { sound } from '../services/audio';
 import { CharacterSprite } from './CharacterSprite';
@@ -42,11 +43,41 @@ export const RoomView: React.FC<RoomViewProps> = ({
   const [characterX, setCharacterX] = useState<number>(30);
   const [facing, setFacing] = useState<'left' | 'right'>('right');
   const [isWalking, setIsWalking] = useState<boolean>(false);
+  const [isJumping, setIsJumping] = useState<boolean>(false);
   const [targetX, setTargetX] = useState<number | null>(null);
   const pendingInteractionRef = useRef<InteractiveObject | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastStepTimeRef = useRef<number>(0);
   const stepTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isJumpingRef = useRef(isJumping);
+  isJumpingRef.current = isJumping;
+  const jumpTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Jump action handler with sound effect and physics duration
+  const handleJump = useCallback(() => {
+    if (isJumpingRef.current) return;
+    setIsJumping(true);
+    sound.playJump();
+
+    if (jumpTimeoutRef.current) {
+      clearTimeout(jumpTimeoutRef.current);
+    }
+    jumpTimeoutRef.current = setTimeout(() => {
+      setIsJumping(false);
+    }, 540);
+  }, []);
+
+  const handleJumpRef = useRef(handleJump);
+  handleJumpRef.current = handleJump;
+
+  // Clear jump timer on unmount
+  useEffect(() => {
+    return () => {
+      if (jumpTimeoutRef.current) {
+        clearTimeout(jumpTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Determine neighboring rooms for left and right doorways
   const currentRoomIndex = allRooms.findIndex((r) => r.id === room.id);
@@ -247,10 +278,18 @@ export const RoomView: React.FC<RoomViewProps> = ({
         }
       }
 
-      // Interact with doorway or nearby object via E or Space
-      if (e.key === 'e' || e.key === 'E' || e.key === ' ') {
+      // Jump via W, ArrowUp, or Space
+      if (['ArrowUp', 'w', 'W', ' '].includes(e.key)) {
+        e.preventDefault();
+        handleJumpRef.current();
+        return;
+      }
+
+      // Interact with doorway or nearby object via E
+      if (e.key === 'e' || e.key === 'E') {
         e.preventDefault();
         handleActionTriggerRef.current();
+        return;
       }
     };
 
@@ -440,11 +479,12 @@ export const RoomView: React.FC<RoomViewProps> = ({
           );
         })}
 
-        {/* Playable Character Sprite Walking on the Lab Floor */}
+        {/* Playable Character Sprite Walking & Jumping on the Lab Floor */}
         <CharacterSprite
           posX={characterX}
           facing={facing}
           isWalking={isWalking}
+          isJumping={isJumping}
           actionPrompt={activeActionPrompt}
           onAction={handleActionTrigger}
         />
@@ -459,16 +499,31 @@ export const RoomView: React.FC<RoomViewProps> = ({
       </div>
 
       {/* Responsive Character Controls Dock */}
-      <div className="flex items-center justify-center gap-3 bg-[#f8fafc] border-3 border-[#1e293b] rounded-2xl p-2.5 sm:p-3 shadow-md">
+      <div className="flex items-center justify-center gap-2 sm:gap-3 bg-[#f8fafc] border-3 border-[#1e293b] rounded-2xl p-2 sm:p-3 shadow-md flex-wrap sm:flex-nowrap">
         {/* Walk Left Button */}
         <button
           type="button"
           id="btn-walk-left"
           onClick={() => handleManualStep('left')}
-          className="flex-1 max-w-44 py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 border-2 border-[#1e293b] text-[#0f172a] font-mono-tech text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xs cursor-pointer"
+          className="flex-1 min-w-24 max-w-36 py-2.5 px-3 rounded-xl bg-white hover:bg-slate-100 border-2 border-[#1e293b] text-[#0f172a] font-mono-tech text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4 text-[#0284c7]" />
-          <span>Jalan Kiri</span>
+          <span>Kiri</span>
+        </button>
+
+        {/* Jump Button */}
+        <button
+          type="button"
+          id="btn-jump"
+          onClick={handleJump}
+          className={`flex-1 min-w-28 max-w-40 py-2.5 px-3 rounded-xl border-2 border-[#1e293b] text-[#0f172a] font-mono-tech text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer ${
+            isJumping
+              ? 'bg-emerald-400 scale-95 shadow-inner'
+              : 'bg-emerald-300 hover:bg-emerald-200'
+          }`}
+        >
+          <ChevronsUp className={`w-4 h-4 text-[#0f172a] ${isJumping ? 'animate-bounce' : ''}`} />
+          <span>Lompat</span>
         </button>
 
         {/* Action / Inspect Button for Nearby Object or Doorway */}
@@ -477,7 +532,7 @@ export const RoomView: React.FC<RoomViewProps> = ({
           id="btn-inspect-nearby"
           disabled={!activeActionPrompt || activeActionPrompt.label === 'Batas Fasilitas'}
           onClick={handleActionTrigger}
-          className={`flex-1 max-w-72 py-2.5 px-4 rounded-xl border-2 font-mono-tech text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xs ${
+          className={`flex-1 min-w-44 max-w-64 py-2.5 px-3 sm:px-4 rounded-xl border-2 font-mono-tech text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xs ${
             activeActionPrompt && activeActionPrompt.label !== 'Batas Fasilitas'
               ? activeActionPrompt.isDoor
                 ? 'bg-cyan-300 hover:bg-cyan-200 border-[#1e293b] text-[#0f172a] shadow-md animate-bounce cursor-pointer'
@@ -500,9 +555,9 @@ export const RoomView: React.FC<RoomViewProps> = ({
           type="button"
           id="btn-walk-right"
           onClick={() => handleManualStep('right')}
-          className="flex-1 max-w-44 py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 border-2 border-[#1e293b] text-[#0f172a] font-mono-tech text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xs cursor-pointer"
+          className="flex-1 min-w-24 max-w-36 py-2.5 px-3 rounded-xl bg-white hover:bg-slate-100 border-2 border-[#1e293b] text-[#0f172a] font-mono-tech text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer"
         >
-          <span>Jalan Kanan</span>
+          <span>Kanan</span>
           <ArrowRight className="w-4 h-4 text-[#0284c7]" />
         </button>
       </div>

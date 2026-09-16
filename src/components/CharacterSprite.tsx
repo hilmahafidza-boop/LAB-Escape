@@ -4,6 +4,7 @@ export interface CharacterSpriteProps {
   posX: number;
   facing: 'left' | 'right';
   isWalking: boolean;
+  isJumping?: boolean;
   nearbyObjectName?: string | null;
   actionPrompt?: { label: string; isDoor?: boolean } | null;
   onAction?: () => void;
@@ -13,6 +14,7 @@ export const CharacterSprite: React.FC<CharacterSpriteProps> = ({
   posX,
   facing,
   isWalking,
+  isJumping = false,
   nearbyObjectName,
   actionPrompt,
   onAction,
@@ -47,6 +49,11 @@ export const CharacterSprite: React.FC<CharacterSpriteProps> = ({
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
           <span className="font-black tracking-wide">{currentPrompt.label}</span>
         </button>
+      ) : isJumping ? (
+        <div className="mb-2 px-3 py-1 rounded-full bg-cyan-300 border-2 border-[#1e293b] text-xs font-mono-tech text-[#0f172a] font-black opacity-95 whitespace-nowrap shadow-md flex items-center gap-1.5 animate-pulse">
+          <span className="w-2 h-2 rounded-full bg-cyan-600 animate-ping" />
+          <span>Lompat!</span>
+        </div>
       ) : isWalking ? (
         <div className="mb-2 px-3 py-1 rounded-full bg-white/95 border-2 border-[#1e293b] text-xs font-mono-tech text-[#0f172a] font-black opacity-95 whitespace-nowrap shadow-xs flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
@@ -77,7 +84,7 @@ export const CharacterSprite: React.FC<CharacterSpriteProps> = ({
         />
 
         {/* Professor Scientist SVG Body */}
-        <div className={`relative z-20 ${isWalking ? 'char-walking-body' : 'char-idle-body'}`}>
+        <div className={`relative z-20 ${isJumping ? 'char-jumping-body' : isWalking ? 'char-walking-body' : 'char-idle-body'}`}>
           <svg
             width="78"
             height="116"
@@ -86,8 +93,8 @@ export const CharacterSprite: React.FC<CharacterSpriteProps> = ({
             xmlns="http://www.w3.org/2000/svg"
             className="drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)] overflow-visible"
           >
-            {/* White Lab Coat Tail / Flaps Back - Swings during walk */}
-            <g className={isWalking ? 'char-coat-tails-walking' : ''}>
+            {/* White Lab Coat Tail / Flaps Back - Swings during walk & jump */}
+            <g className={isJumping ? 'char-jumping-coat' : isWalking ? 'char-coat-tails-walking' : ''}>
               <path
                 d="M14 36L11 67L19 69L22 45"
                 fill="#f1f5f9"
@@ -192,7 +199,7 @@ export const CharacterSprite: React.FC<CharacterSpriteProps> = ({
 
             {/* Dark Trousers / Celana Panjang Formal Peneliti */}
             {/* Left Leg (Back Leg) */}
-            <g className={isWalking ? 'char-leg-left-walking' : ''}>
+            <g className={isJumping ? 'char-jumping-legs' : isWalking ? 'char-leg-left-walking' : ''}>
               <path
                 d="M21 58L20 75L16 78L24 78L25 75L25 58Z"
                 fill="#1e293b"
@@ -204,7 +211,7 @@ export const CharacterSprite: React.FC<CharacterSpriteProps> = ({
             </g>
 
             {/* Right Leg (Front Leg) */}
-            <g className={isWalking ? 'char-leg-right-walking' : ''}>
+            <g className={isJumping ? 'char-jumping-legs' : isWalking ? 'char-leg-right-walking' : ''}>
               <path
                 d="M31 58L31 75L27 78L35 78L37 75L36 58Z"
                 fill="#334155"
@@ -222,10 +229,18 @@ export const CharacterSprite: React.FC<CharacterSpriteProps> = ({
       <div className="relative w-22 h-4 -mt-1 pointer-events-none">
         <div
           className={`w-full h-full rounded-full bg-cyan-500/25 blur-sm transition-all duration-150 ${
-            isWalking ? 'char-shadow-walking' : 'scale-x-100 opacity-70'
+            isJumping
+              ? 'char-jumping-shadow'
+              : isWalking
+              ? 'char-shadow-walking'
+              : 'scale-x-100 opacity-70'
           }`}
         />
-        <div className="absolute inset-x-2 top-0.5 h-2 rounded-full bg-black/80 blur-[1px]" />
+        <div
+          className={`absolute inset-x-2 top-0.5 h-2 rounded-full bg-black/80 blur-[1px] transition-all duration-150 ${
+            isJumping ? 'char-jumping-shadow' : ''
+          }`}
+        />
       </div>
     </div>
   );
